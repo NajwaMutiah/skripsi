@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🗺️TravelMate
 
 Ini adalah proyek full-stack yang melibatkan **frontend** yang dikembangkan dengan **React**, **backend** yang diimplementasikan dengan **Node.js**, dan beberapa fungsionalitas **machine learning**.
@@ -182,3 +183,6 @@ Berikut adalah **langkah-langkah untuk melakukan perubahan dan kemudian push ke 
 
 6. **Verifikasi di GitHub**
    - Buka repositori Anda di GitHub untuk memastikan bahwa perubahan telah berhasil di-push dan tampil dengan benar.
+=======
+# skripsi
+>>>>>>> 28720bf437e540d6381d5a113933216cb557f669

@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const backgroundImages = [
-  "/borobudur.jpg", 
-  "/prambanan.jpg",
-  "/parangtritis.jpg", 
-  "/tamansari.jpg"
+  "/bromo.jpg", 
+  "/villa.jpg",
+  "/gereja.jpg", 
+  "/kalibiru.jpg"
 ];
 
 export const HeroSection = () => {

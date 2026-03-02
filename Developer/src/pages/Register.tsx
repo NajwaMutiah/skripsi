@@ -1,11 +1,9 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, User, UserPlus } from "lucide-react";
-import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/hooks/use-toast";
 
@@ -17,12 +15,13 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name || !email || !password || !confirmPassword) {
       toast({
         title: "Error",
@@ -51,146 +50,121 @@ const Register = () => {
     }
 
     setIsSubmitting(true);
-    
-    const { error } = await signUp(email, password, name);
-    
-    if (!error) {
-      // Redirect ke halaman email sent dengan data yang diperlukan
-      navigate('/email-sent', { 
-        state: { 
-          email, 
-          name, 
-          password 
-        } 
+
+    try {
+      await signUp(email, password, name);
+      
+      toast({
+        title: "Berhasil 🎉",
+        description: "Akun berhasil dibuat! Silakan login.",
       });
+
+      navigate("/login");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Gagal membuat akun.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted">
-      <div className="relative flex-1 flex items-center justify-center px-4 py-12">
-        {/* Nature-themed background elements */}
-        <div className="absolute inset-0 overflow-hidden z-0">
-          <div className="absolute bottom-0 left-0 w-full h-48 bg-[url('/additional/trees.png')] bg-repeat-x bg-bottom opacity-20" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted px-4">
+      <div className="w-full max-w-md bg-card shadow-xl rounded-xl p-8 border border-border">
+
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-travel-600">
+            Travel<span className="text-yogya-500">Mate</span>
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Buat akun baru Anda
+          </p>
         </div>
-        
-        <div className="w-full max-w-md z-10 relative">
-          <div className="bg-card/80 backdrop-blur-lg shadow-xl rounded-xl p-8 border border-border">
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold tracking-tight text-travel-600 dark:text-travel-400">
-                Travel<span className="text-yogya-500 dark:text-yogya-400">Mate</span>
-              </h1>
-              <p className="mt-2 text-muted-foreground">Buat akun baru Anda</p>
+
+        <form onSubmit={handleRegister} className="space-y-6">
+
+          <div>
+            <Label>Nama Lengkap</Label>
+            <div className="relative">
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="pl-10"
+              />
+              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             </div>
-            
-            <form onSubmit={handleRegister} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Nama Lengkap</Label>
-                <div className="relative">
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Masukkan nama lengkap"
-                    autoComplete="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                  <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="nama@contoh.com"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                  <span 
-                    className="absolute right-3 top-3 h-4 w-4 text-muted-foreground cursor-pointer"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground">Minimal 6 karakter</p>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Konfirmasi Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    autoComplete="new-password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                  <span 
-                    className="absolute right-3 top-3 h-4 w-4 text-muted-foreground cursor-pointer"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </span>
-                </div>
-              </div>
-              
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>Membuat Akun...</>
-                ) : (
-                  <>
-                    <UserPlus className="mr-2 h-4 w-4" /> Daftar
-                  </>
-                )}
-              </Button>
-              
-              <div className="text-center">
-                <span className="text-sm text-muted-foreground">
-                  Sudah punya akun?{" "}
-                  <Link 
-                    to="/login" 
-                    className="text-travel-600 hover:text-travel-700 dark:text-travel-400 dark:hover:text-travel-300 font-medium"
-                  >
-                    Masuk
-                  </Link>
-                </span>
-              </div>
-            </form>
           </div>
-        </div>
+
+          <div>
+            <Label>Email</Label>
+            <div className="relative">
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10"
+              />
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            </div>
+          </div>
+
+          <div>
+            <Label>Password</Label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10"
+              />
+              <span
+                className="absolute right-3 top-3 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <Label>Konfirmasi Password</Label>
+            <div className="relative">
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="pl-10"
+              />
+              <span
+                className="absolute right-3 top-3 cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </span>
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Membuat Akun..." : (
+              <>
+                <UserPlus className="mr-2 h-4 w-4" /> Daftar
+              </>
+            )}
+          </Button>
+
+          <div className="text-center text-sm">
+            Sudah punya akun?{" "}
+            <Link to="/login" className="text-travel-600 font-medium">
+              Masuk
+            </Link>
+          </div>
+
+        </form>
       </div>
-      
     </div>
   );
 };

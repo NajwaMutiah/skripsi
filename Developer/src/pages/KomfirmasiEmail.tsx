@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../integrations/supabase/client";
 
 const backgroundImages = [
-  "/borobudur.jpg", 
-  "/prambanan.jpg",
-  "/parangtritis.jpg", 
-  "/tamansari.jpg"
+  "/bromo.jpg", 
+  "/villa.jpg",
+  "/gereja.jpg", 
+  "/kalibiru.jpg"
 ];
 
 const KonfirmasiEmail = () => {

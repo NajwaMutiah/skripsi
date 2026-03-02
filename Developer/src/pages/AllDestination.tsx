@@ -12,8 +12,6 @@ interface Destination {
   nama: string;
   lokasi: string;
   kategori: string;
-  rating: number;
-  harga: number;
   gambar: string;
   deskripsi: string; 
 }
@@ -51,10 +49,8 @@ const mapKategori = (kategoriDariTs: string): string => {
 const transformedDestinations: Destination[] = destinasiWisata.map(item => ({
   id: Number(item.id),
   nama: item.nama,
-  lokasi: item.lokasi.alamat,
-  kategori: mapKategori(item.kategori), // Use the refined mapKategori
-  rating: item.rating,
-  harga: item.biaya.masuk,
+  lokasi: item.alamat,
+  kategori: mapKategori(item.kategori), // Use the refined mapKategori,
   gambar: item.gambar,
   deskripsi: item.deskripsi,
 }));
@@ -178,21 +174,7 @@ const KartuDestinasi = ({ destinasi }: { destinasi: Destination }) => {
             {destinasi.deskripsi}
           </p>
           
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-              <span className="text-sm font-medium text-travel-700 dark:text-travel-300">
-                {destinasi.rating}
-              </span>
-            </div>
-            
-            <div className="flex items-center text-travel-600 dark:text-travel-400">
-              <DollarSign className="h-4 w-4 mr-1" />
-              <span className="font-semibold">
-                {destinasi.harga === 0 ? 'Gratis' : `Rp ${destinasi.harga.toLocaleString()}`}
-              </span>
-            </div>
-          </div>
+          
         </div>
       </div>
     </Link>
@@ -232,9 +214,9 @@ const AllDestinations = () => {
     }
 
     // Filter by rating
-    if (filters.minRating > 0) {
-      currentDestinations = currentDestinations.filter(dest => dest.rating >= filters.minRating);
-    }
+    // if (filters.minRating > 0) {
+    //   currentDestinations = currentDestinations.filter(dest => dest.rating >= filters.minRating);
+    // }
 
     setFilteredDestinations(currentDestinations);
   };

@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react"; // Removed 'useRef' as it's not used directly for this logic
 
 const backgroundImages = [
-  "/borobudur.jpg",
-  "/prambanan.jpg",
-  "/parangtritis.jpg",
+  "/bromo.jpg",
+  "/villa.jpg",
+  "/gereja.jpg",
   "/tamansari.jpg"
 ];
 
@@ -110,7 +110,7 @@ const EnhancedHeroSection = ({ onSelectCategory, currentSelectedCategory }: Hero
             <div className="flex items-center justify-center gap-2 mb-4">
               <Mountain size={32} className="text-white/80 animate-bounce" />
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2 text-shadow-lg">
-                Explore <span className="text-yogya-400">Yogyakarta</span> On Your Budget
+                Jelajahi <span className="text-yogya-400">Kota Malang</span> Sesuai Anggaranmu
               </h1>
               <Trees size={32} className="text-white/80 animate-bounce delay-75" />
             </div>
@@ -122,7 +122,7 @@ const EnhancedHeroSection = ({ onSelectCategory, currentSelectedCategory }: Hero
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-xl text-white/90 mb-8 max-w-2xl mx-auto text-shadow"
           >
-            Discover the perfect destinations that match your budget and preferences
+           Temukan destinasi yang sesuai dengan anggaran dan pilihan Anda
           </motion.p>
 
           <motion.div
@@ -133,7 +133,7 @@ const EnhancedHeroSection = ({ onSelectCategory, currentSelectedCategory }: Hero
           >
             <Button onClick={scrollToLocation} className="bg-travel-500 hover:bg-travel-600 text-white group" size="lg">
               <Search size={18} className="mr-2" />
-              Explore Destinations
+              Jelajahi Destinasi
               <ArrowDown size={16} className="ml-2 transition-transform group-hover:translate-y-1" />
             </Button>
 
@@ -144,7 +144,7 @@ const EnhancedHeroSection = ({ onSelectCategory, currentSelectedCategory }: Hero
                 )
                   } className="border-white text-white hover:bg-white/10 group">
               <Map size={18} className="mr-2" />
-              Browse Map
+              Telusuri Peta
             </Button>
           </motion.div>
 

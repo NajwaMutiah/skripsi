@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from '@/hooks/use-location';
-import { destinasiWisata } from '@/data/destinations';
+import { fetchDestinations } from '@/services/destinationService';
 import { TujuanWisata, FilterAnggaran, FilterJarak } from '@/types';
 import { calculateDistance, calculateTravelCost, getTotalCost, formatRupiah } from '@/utils/calculations';
 import NavBar from '@/components/NavBar';
@@ -36,63 +36,61 @@ const Index = () => {
   }, [location.loaded]);
 
   useEffect(() => {
-    if (location.loaded && !location.error) {
-      // Proses tujuan wisata dengan perhitungan jarak dan biaya
-      const destinasiDiproses = destinasiWisata.map(destinasi => {
-        const jarak = calculateDistance(
-          location.latitude,
-          location.longitude,
-          destinasi.lokasi.latitude,
-          destinasi.lokasi.longitude
-        );
-        
-        const biayaPerjalanan = calculateTravelCost(jarak);
-        const totalBiaya = getTotalCost(
-          destinasi.biaya.masuk,
-          destinasi.biaya.makanan,
-          destinasi.biaya.penginapan,
-          biayaPerjalanan
-        );
-        
-        return {
-          ...destinasi,
-          jarak,
-          biayaPerjalanan,
-          totalBiaya
-        };
-      });
-      
-      setDestinasi(destinasiDiproses);
-      terapkanFilter(destinasiDiproses, filterAnggaran, filterJarak);
-    }
-  }, [location.loaded, location.error]);
+  const loadData = async () => {
+    try {
+      const data = await fetchDestinations();
 
-  const terapkanFilter = (
-    dests: TujuanWisata[], 
-    anggaran: FilterAnggaran, 
-    jarak: FilterJarak
-  ) => {
-    const terfilter = dests.filter(dest => {
-      const cocokDenganAnggaran = dest.totalBiaya !== undefined && 
-        dest.totalBiaya >= anggaran.min && 
-        dest.totalBiaya <= anggaran.max;
-        
-      const cocokDenganJarak = dest.jarak !== undefined && 
-        dest.jarak <= jarak.jarakMaksimum;
-        
-      return cocokDenganAnggaran && cocokDenganJarak;
-    });
-    
-    // Urutkan berdasarkan jarak (terdekat lebih dulu)
-    terfilter.sort((a, b) => {
-      if (a.jarak !== undefined && b.jarak !== undefined) {
-        return a.jarak - b.jarak;
-      }
-      return 0;
-    });
-    
-    setDestinasiTerfilter(terfilter);
+      const destinasiDiproses: TujuanWisata[] = data.map((item: any) => ({
+        id: item.id,
+        nama: item.nama,
+        deskripsi: item.deskripsi,
+
+        // 🔥 FIX GAMBAR
+        gambar: item.gambar,
+
+        alamat: item.alamat,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        kategori: item.kategori,
+        jamBuka: item.jamBuka,
+      }));
+
+      setDestinasi(destinasiDiproses);
+      setDestinasiTerfilter(destinasiDiproses);
+    } catch (error) {
+      console.error("Gagal mengambil data:", error);
+    }
   };
+
+  loadData();
+}, []);
+
+  // const terapkanFilter = (
+  //   dests: TujuanWisata[], 
+  //   anggaran: FilterAnggaran, 
+  //   jarak: FilterJarak
+  // ) => {
+  //   const terfilter = dests.filter(dest => {
+  //     const cocokDenganAnggaran = dest.totalBiaya !== undefined && 
+  //       dest.totalBiaya >= anggaran.min && 
+  //       dest.totalBiaya <= anggaran.max;
+        
+  //     const cocokDenganJarak = dest.jarak !== undefined && 
+  //       dest.jarak <= jarak.jarakMaksimum;
+        
+  //     return cocokDenganAnggaran && cocokDenganJarak;
+  //   });
+    
+  //   // Urutkan berdasarkan jarak (terdekat lebih dulu)
+  //   terfilter.sort((a, b) => {
+  //     if (a.jarak !== undefined && b.jarak !== undefined) {
+  //       return a.jarak - b.jarak;
+  //     }
+  //     return 0;
+  //   });
+    
+  //   setDestinasiTerfilter(terfilter);
+  // };
 
   const handleFilterChange = (anggaran: FilterAnggaran, jarakMaksimum: number) => {
     const filterAnggaranBaru = { ...anggaran };
@@ -101,7 +99,7 @@ const Index = () => {
     setFilterAnggaran(filterAnggaranBaru);
     setFilterJarak(filterJarakBaru);
     
-    terapkanFilter(destinasi, filterAnggaranBaru, filterJarakBaru);
+    //terapkanFilter(destinasi, filterAnggaranBaru, filterJarakBaru);
     
     toast({
       title: "Filter Diterapkan",
@@ -135,7 +133,7 @@ const Index = () => {
     setFilterAnggaran(filterAnggaranDefault);
     setFilterJarak(filterJarakDefault);
     
-    terapkanFilter(destinasi, filterAnggaranDefault, filterJarakDefault);
+   // terapkanFilter(destinasi, filterAnggaranDefault, filterJarakDefault);
     
     toast({
       title: "Filter Direset",

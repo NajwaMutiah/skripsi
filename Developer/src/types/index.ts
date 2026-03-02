@@ -1,29 +1,15 @@
 
 
 export interface TujuanWisata {
-  id: string | number;
+  id: number;
   nama: string;
   deskripsi: string;
   gambar: string;
-  lokasi: {
-    latitude: number;
-    longitude: number;
-    alamat: string;
-  };
-  biaya: {
-    masuk: number;
-    makanan: number;
-    penginapan: number;
-  };
-  rating: number;
-  totalBiaya?: number;
-  jarak?: number;
-  biayaPerjalanan?: number;
-  
-  waktuTerbaikUntukMengunjungi?: string;
+  alamat: string;
+  latitude: number;
+  longitude: number;
   kategori?: string;
   jamBuka?: string;
-  komentar?: Komentar[];
 }
 
 export interface Komentar {
